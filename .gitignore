@@ -1,0 +1,19 @@
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment & Secrets
+.env
+*.key
+auth.json
+
+# Dependencies (will be ignored in subfolders too)
+node_modules/
+vendor/
+
+# Docker/Podman
+.docker-data/

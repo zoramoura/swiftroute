@@ -1,0 +1,62 @@
+services:
+  # 1. Laravel Core API (PHP 8.3)
+  api:
+    build: 
+      context: ./backend-core
+      dockerfile: ../docker/php.dockerfile
+    container_name: swiftroute_api
+    ports:
+      - "8000:8000"  # <--- Add this line
+    volumes:
+      - ./backend-core:/var/www:z
+    networks:
+      - swiftroute_net
+    depends_on:
+      - db
+      - redis
+
+  # 2. Real-time Gateway (Node.js)
+  gateway:
+    build: 
+      context: ./backend-realtime
+      dockerfile: ../docker/node.dockerfile
+    container_name: swiftroute_gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend-realtime:/app:z
+    networks:
+      - swiftroute_net
+    depends_on:
+      - redis
+
+  # 3. Database (PostgreSQL + PostGIS)
+  db:
+    image: docker.io/postgis/postgis:15-3.3
+    container_name: swiftroute_db
+    environment:
+      POSTGRES_DB: swiftroute
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - swiftroute_db_data:/var/lib/postgresql/data:Z
+    networks:
+      - swiftroute_net
+
+  # 4. Message Broker (Redis)
+  redis:
+    image: docker.io/redis:7-alpine
+    container_name: swiftroute_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - swiftroute_net
+
+networks:
+  swiftroute_net:
+    driver: bridge
+
+volumes:
+  swiftroute_db_data:
