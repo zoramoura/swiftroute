@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'uuid',
         'name',
         'email',
         'password',
@@ -42,8 +43,14 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'uuid' => 'string',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function deliveries(): HasMany
+    {
+        return $this->hasMany(Delivery::class);
     }
 }
