@@ -36,6 +36,20 @@ class User extends Authenticatable
     ];
 
     /**
+     * Auto-generate UUID on model creation (ADR-004)
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
