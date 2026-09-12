@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Delivery;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -10,15 +11,13 @@ class DeliveryFactory extends Factory
 {
     protected $model = Delivery::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
-            'uuid' => Str::uuid(),
-            'tracking_number' => Str::random(10),
-            'sender_id' => User::factory(),
-            'receiver_id' => User::factory(),
+            'uuid' => fake()->uuid(),
+            'tracking_number' => 'SR-' . strtoupper(fake()->unique()->bothify('??###?#')),
             'status' => 'pending',
-            'notes' => $this->faker->sentence(),
+            'notes' => fake()->optional()->sentence(),
         ];
     }
 }
